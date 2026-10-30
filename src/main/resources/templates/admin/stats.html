@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giám sát</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+<header th:replace="~{fragments/nav :: bar}"></header>
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Giám sát</h1>
+        <p class="text-sm text-slate-500 mt-1">Quản trị không sửa điểm.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6">
+            <div class="text-sm font-medium text-slate-500">Số bài tập</div>
+            <div class="text-3xl font-bold text-indigo-600 mt-2" th:text="${stats.assignments}">0</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6">
+            <div class="text-sm font-medium text-slate-500">Số bài nộp</div>
+            <div class="text-3xl font-bold text-amber-600 mt-2" th:text="${stats.submissions}">0</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6">
+            <div class="text-sm font-medium text-slate-500">Số bài đã chấm</div>
+            <div class="text-3xl font-bold text-emerald-600 mt-2" th:text="${stats.graded}">0</div>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+        <a th:href="@{/admin/assignments}"
+           class="px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 shadow-xs transition">
+            Danh sách bài tập
+        </a>
+        <a th:href="@{/admin/users}"
+           class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
+            Tài khoản và vai trò
+        </a>
+        <a th:href="@{/admin/tasks}"
+           class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
+            Giám sát toàn bộ công việc
+        </a>
+    </div>
+</main>
+</body>
+</html>

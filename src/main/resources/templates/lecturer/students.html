@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giao bài</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+<header th:replace="~{fragments/nav :: bar}"></header>
+<main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-8">
+        <h1 class="text-2xl font-bold text-slate-900">Giao học viên</h1>
+        <p class="text-sm font-medium text-indigo-600 mt-1 mb-6" th:text="${assignment.title}">Tiêu đề</p>
+
+        <div th:if="${error}" class="mb-4 rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-700" th:text="${error}"></div>
+        <div th:if="${assignment.status.name() == 'CLOSED'}"
+             class="mb-4 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
+            Bài đã đóng, không giao thêm.
+        </div>
+
+        <form th:if="${assignment.status.name() != 'CLOSED'}"
+              th:action="@{/lecturer/assignments/{id}/students(id=${assignment.id})}" method="post" class="space-y-4">
+            <p th:if="${students.empty}" class="text-sm text-slate-500">Chưa có tài khoản học viên.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" th:if="${!students.empty}">
+                <label th:each="student : ${students}"
+                       class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                    <input type="checkbox" name="studentIds" th:value="${student.id}"
+                           class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                    <span class="text-sm font-medium text-slate-800" th:text="${student.username}">hv</span>
+                </label>
+            </div>
+
+            <div class="pt-3 flex items-center gap-3">
+                <button type="submit"
+                        class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 shadow-xs transition cursor-pointer">
+                    Lưu danh sách giao
+                </button>
+                <a th:href="@{/lecturer/assignments/{id}/edit(id=${assignment.id})}"
+                   class="px-5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
+                    Quay lại
+                </a>
+            </div>
+        </form>
+
+        <div th:if="${assignment.status.name() == 'CLOSED'}" class="mt-4">
+            <a th:href="@{/lecturer/assignments/{id}/edit(id=${assignment.id})}"
+               class="inline-flex items-center px-5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
+                Quay lại
+            </a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

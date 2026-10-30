@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài nộp của tôi</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+<header th:replace="~{fragments/nav :: bar}"></header>
+<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+            <h1 class="text-2xl font-bold text-slate-900" th:text="${submission.assignmentTitle}">Bài nộp</h1>
+            <span class="text-xs text-slate-500">Lúc: <span class="font-medium text-slate-700" th:text="${submission.submittedAtText}">lúc</span></span>
+        </div>
+
+        <div class="rounded-xl bg-slate-50 border border-slate-200 p-4 text-sm text-slate-800 whitespace-pre-wrap"
+             th:text="${submission.content}">Nội dung</div>
+
+        <div th:if="${submission.score != null}" class="rounded-xl bg-emerald-50 border border-emerald-200 p-4 space-y-1">
+            <div class="text-sm font-semibold text-emerald-900">
+                Điểm: <span class="text-lg font-bold text-emerald-700" th:text="${submission.score}">0</span>
+            </div>
+            <div th:if="${submission.feedback != null}" class="text-sm text-emerald-800">
+                Nhận xét: <span th:text="${submission.feedback}">Nhận xét</span>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

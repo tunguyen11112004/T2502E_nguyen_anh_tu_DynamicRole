@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chấm điểm</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+<header th:replace="~{fragments/nav :: bar}"></header>
+<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-8">
+        <h1 class="text-2xl font-bold text-slate-900 mb-4">Chấm điểm</h1>
+
+        <div class="rounded-xl bg-slate-50 border border-slate-200 p-4 mb-6 space-y-2">
+            <div class="text-sm text-slate-600">
+                Học viên: <span class="font-semibold text-indigo-600" th:text="${submission.studentUsername}">hv</span>
+            </div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Nội dung:</div>
+            <div class="text-sm text-slate-800 whitespace-pre-wrap bg-white rounded-lg border border-slate-200 p-3"
+                 th:text="${submission.content}">Nội dung</div>
+        </div>
+
+        <form th:action="@{/lecturer/assignments/{id}/submissions/{submissionId}/grade(id=${assignment.id}, submissionId=${submission.id})}"
+              th:object="${grade}" method="post" class="space-y-5">
+            <div th:if="${#fields.hasGlobalErrors()}"
+                 th:each="e : ${#fields.globalErrors()}"
+                 th:text="${e}"
+                 class="rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-700"></div>
+
+            <div>
+                <label for="score" class="block text-sm font-medium text-slate-700 mb-1.5">Điểm (0–10, tối đa 2 số lẻ)</label>
+                <input id="score" th:field="*{score}" required
+                       class="w-full sm:w-48 rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                <span th:errors="*{score}" class="block mt-1 text-xs font-medium text-rose-600"></span>
+            </div>
+
+            <div>
+                <label for="feedback" class="block text-sm font-medium text-slate-700 mb-1.5">Nhận xét</label>
+                <textarea id="feedback" th:field="*{feedback}" maxlength="2000" rows="4" required
+                          class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"></textarea>
+                <span th:errors="*{feedback}" class="block mt-1 text-xs font-medium text-rose-600"></span>
+            </div>
+
+            <div class="pt-2 flex items-center gap-3">
+                <button type="submit"
+                        class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 shadow-xs transition cursor-pointer">
+                    Lưu điểm
+                </button>
+                <a th:href="@{/lecturer/assignments/{id}/submissions(id=${assignment.id})}"
+                   class="px-5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
+                    Hủy
+                </a>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

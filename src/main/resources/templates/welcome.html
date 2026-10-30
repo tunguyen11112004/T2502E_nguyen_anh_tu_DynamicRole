@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chào</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+<header th:replace="~{fragments/nav :: bar}"></header>
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-10 mb-8">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 mb-4">
+            Spring Security 7 · Thymeleaf · JPA
+        </span>
+        <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-3">
+            Cổng giao bài &amp; Quản lý công việc cá nhân
+        </h1>
+        <p sec:authorize="isAuthenticated()" class="text-lg text-slate-600 mb-6">
+            Xin chào <span class="font-semibold text-indigo-600" sec:authentication="name"></span>! Chọn chức năng bên dưới để bắt đầu làm việc.
+        </p>
+        <p sec:authorize="!isAuthenticated()" class="text-lg text-slate-600 mb-6">
+            Đăng ký để nhận vai trò học viên và quản lý công việc cá nhân, hoặc đăng nhập nếu đã có tài khoản.
+        </p>
+
+        <div sec:authorize="!isAuthenticated()" class="flex flex-wrap gap-3">
+            <a th:href="@{/login}"
+               class="inline-flex items-center px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 shadow-xs transition">
+                Đăng nhập ngay
+            </a>
+            <a th:href="@{/register}"
+               class="inline-flex items-center px-5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 font-medium text-sm hover:bg-slate-50 transition">
+                Tạo tài khoản mới
+            </a>
+        </div>
+
+        <div sec:authorize="isAuthenticated()" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+            <a th:href="@{/tasks}"
+               class="group block p-5 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-indigo-300 hover:shadow-md transition">
+                <div class="text-xs font-semibold uppercase tracking-wider text-indigo-600 mb-1">Cá nhân</div>
+                <div class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition">Công việc của tôi</div>
+                <p class="text-sm text-slate-600 mt-1">Tạo, cập nhật, đánh dấu hoàn thành và xóa công việc cá nhân.</p>
+            </a>
+
+            <a sec:authorize="hasRole('STUDENT')" th:href="@{/student/assignments}"
+               class="group block p-5 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-indigo-300 hover:shadow-md transition">
+                <div class="text-xs font-semibold uppercase tracking-wider text-emerald-600 mb-1">Học viên</div>
+                <div class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition">Bài tập được giao</div>
+                <p class="text-sm text-slate-600 mt-1">Xem bài đang mở, nộp hoặc nộp lại trước hạn và tra cứu điểm.</p>
+            </a>
+
+            <a sec:authorize="hasRole('LECTURER')" th:href="@{/lecturer/assignments}"
+               class="group block p-5 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-indigo-300 hover:shadow-md transition">
+                <div class="text-xs font-semibold uppercase tracking-wider text-amber-600 mb-1">Giảng viên</div>
+                <div class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition">Quản lý bài tập</div>
+                <p class="text-sm text-slate-600 mt-1">Tạo bài nháp, giao học viên, mở/đóng bài và chấm điểm bài nộp.</p>
+            </a>
+
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/tasks}"
+               class="group block p-5 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-indigo-300 hover:shadow-md transition">
+                <div class="text-xs font-semibold uppercase tracking-wider text-purple-600 mb-1">Quản trị</div>
+                <div class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition">Giám sát toàn bộ công việc</div>
+                <p class="text-sm text-slate-600 mt-1">Xem danh sách công việc của tất cả người dùng theo phân trang.</p>
+            </a>
+
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"
+               class="group block p-5 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-indigo-300 hover:shadow-md transition">
+                <div class="text-xs font-semibold uppercase tracking-wider text-rose-600 mb-1">Quản trị hệ thống</div>
+                <div class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition">Giám sát &amp; Phân quyền</div>
+                <p class="text-sm text-slate-600 mt-1">Thống kê bài tập, bài nộp và cấp vai trò tài khoản.</p>
+            </a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

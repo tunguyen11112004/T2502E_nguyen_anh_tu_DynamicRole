@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công việc của tôi</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+<header th:replace="~{fragments/nav :: bar}"></header>
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Công việc của tôi</h1>
+            <p class="text-sm text-slate-500 mt-1">Quản lý danh sách công việc cá nhân theo thời hạn hoàn thành.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a th:href="@{/}"
+               class="px-4 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
+                Trang chủ
+            </a>
+            <a th:href="@{/tasks/new}"
+               class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 shadow-xs transition">
+                + Thêm công việc
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div th:if="${tasks.empty}" class="p-8 text-center text-slate-500 text-sm">
+            Chưa có công việc.
+        </div>
+
+        <div class="overflow-x-auto" th:if="${!tasks.empty}">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <tr>
+                    <th class="px-6 py-3.5">Tiêu đề</th>
+                    <th class="px-6 py-3.5">Hạn</th>
+                    <th class="px-6 py-3.5">Trạng thái</th>
+                    <th class="px-6 py-3.5 text-right">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 text-sm">
+                <tr th:each="t : ${tasks.content}" class="hover:bg-slate-50/80 transition">
+                    <td class="px-6 py-4">
+                        <div class="font-semibold text-slate-900" th:text="${t.title}"></div>
+                        <div th:if="${!#strings.isEmpty(t.description)}" class="text-xs text-slate-500 mt-0.5" th:text="${t.description}"></div>
+                    </td>
+                    <td class="px-6 py-4 text-slate-600 whitespace-nowrap" th:text="${t.dueDate}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span th:text="${t.status}"
+                              th:classappend="${t.status.name() == 'DONE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}"
+                              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border">
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                        <div class="inline-flex items-center gap-2">
+                            <a th:href="@{/tasks/{id}/edit(id=${t.id})}"
+                               class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 text-xs font-medium hover:bg-slate-50 transition">
+                                Sửa
+                            </a>
+                            <form th:action="@{/tasks/{id}/delete(id=${t.id})}" method="post" class="inline m-0">
+                                <button type="submit"
+                                        class="px-3 py-1.5 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 text-xs font-medium hover:bg-rose-100 transition cursor-pointer">
+                                    Xóa
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-6 flex items-center justify-between text-sm text-slate-600">
+        <div>
+            Trang <span class="font-semibold text-slate-900" th:text="${tasks.number + 1}"></span>
+        </div>
+        <div class="flex items-center gap-2">
+            <a th:if="${tasks.hasPrevious()}"
+               th:href="@{/tasks(page=${tasks.number - 1})}"
+               class="px-3.5 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 font-medium hover:bg-slate-50 transition">
+                Trang trước
+            </a>
+            <a th:if="${tasks.hasNext()}"
+               th:href="@{/tasks(page=${tasks.number + 1})}"
+               class="px-3.5 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 font-medium hover:bg-slate-50 transition">
+                Trang sau
+            </a>
+        </div>
+    </div>
+</main>
+</body>
+</html>
+

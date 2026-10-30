@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài của tôi</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+<header th:replace="~{fragments/nav :: bar}"></header>
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Bài tập của tôi</h1>
+            <p class="text-sm text-slate-500 mt-1">Quản lý danh sách bài tập do bạn phụ trách.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+            <form method="get" th:action="@{/lecturer/assignments}" class="flex items-center gap-2 m-0">
+                <label for="status" class="text-sm font-medium text-slate-700">Trạng thái</label>
+                <select id="status" name="status"
+                        class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none">
+                    <option value="">Tất cả</option>
+                    <option th:each="item : ${statuses}" th:value="${item}" th:text="${item}"
+                            th:selected="${status == item}"></option>
+                </select>
+                <button type="submit"
+                        class="px-4 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition cursor-pointer">
+                    Lọc
+                </button>
+            </form>
+            <a th:href="@{/lecturer/assignments/new}"
+               class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 shadow-xs transition">
+                + Tạo bài nháp
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div th:if="${assignments.empty}" class="p-8 text-center text-slate-500 text-sm">
+            Chưa có bài tập.
+        </div>
+
+        <div class="overflow-x-auto" th:if="${!assignments.empty}">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <tr>
+                    <th class="px-6 py-3.5">Tiêu đề</th>
+                    <th class="px-6 py-3.5">Hạn nộp</th>
+                    <th class="px-6 py-3.5">Trạng thái</th>
+                    <th class="px-6 py-3.5 text-right">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 text-sm">
+                <tr th:each="item : ${assignments.content}" class="hover:bg-slate-50/80 transition">
+                    <td class="px-6 py-4 font-semibold text-slate-900" th:text="${item.title}">Tiêu đề</td>
+                    <td class="px-6 py-4 text-slate-600 whitespace-nowrap" th:text="${item.deadlineText}">Hạn</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span th:text="${item.status}"
+                              th:classappend="${item.status.name() == 'OPEN' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : (item.status.name() == 'CLOSED' ? 'bg-slate-100 text-slate-700 border-slate-300' : 'bg-amber-50 text-amber-700 border-amber-200')}"
+                              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border">DRAFT</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                        <div class="inline-flex items-center gap-2">
+                            <a th:href="@{/lecturer/assignments/{id}/edit(id=${item.id})}"
+                               class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 text-xs font-medium hover:bg-slate-50 transition">
+                                Sửa
+                            </a>
+                            <a th:href="@{/lecturer/assignments/{id}/students(id=${item.id})}"
+                               class="px-3 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-700 text-xs font-medium hover:bg-indigo-100 transition">
+                                Giao
+                            </a>
+                            <a th:href="@{/lecturer/assignments/{id}/submissions(id=${item.id})}"
+                               class="px-3 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 text-xs font-medium hover:bg-emerald-100 transition">
+                                Bài nộp
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <nav th:replace="~{fragments/nav :: pager(${assignments})}"></nav>
+</main>
+</body>
+</html>

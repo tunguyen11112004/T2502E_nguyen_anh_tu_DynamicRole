@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biên tập công việc</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+<header th:replace="~{fragments/nav :: bar}"></header>
+<main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-8">
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-slate-900"
+                th:text="${taskId == null ? 'Thêm công việc' : 'Sửa công việc'}"></h1>
+            <p class="text-sm text-slate-500 mt-1">Điền thông tin chi tiết và hạn hoàn thành cho công việc của bạn.</p>
+        </div>
+
+        <form th:action="@{${actionUrl}}" th:object="${form}" method="post" class="space-y-5">
+            <div>
+                <label for="title" class="block text-sm font-medium text-slate-700 mb-1.5">Tiêu đề</label>
+                <input id="title" th:field="*{title}" maxlength="150" required
+                       class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                <span th:errors="*{title}" class="block mt-1 text-xs font-medium text-rose-600"></span>
+            </div>
+
+            <div>
+                <label for="description" class="block text-sm font-medium text-slate-700 mb-1.5">Mô tả</label>
+                <textarea id="description" th:field="*{description}" maxlength="2000" rows="4"
+                          class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"></textarea>
+                <span th:errors="*{description}" class="block mt-1 text-xs font-medium text-rose-600"></span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="dueDate" class="block text-sm font-medium text-slate-700 mb-1.5">Hạn hoàn thành</label>
+                    <input id="dueDate" type="date" th:field="*{dueDate}" required
+                           class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                    <span th:errors="*{dueDate}" class="block mt-1 text-xs font-medium text-rose-600"></span>
+                </div>
+
+                <div>
+                    <label for="status" class="block text-sm font-medium text-slate-700 mb-1.5">Trạng thái</label>
+                    <select id="status" th:field="*{status}"
+                            class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                        <option th:each="s : ${statuses}"
+                                th:value="${s}" th:text="${s}"></option>
+                    </select>
+                    <span th:errors="*{status}" class="block mt-1 text-xs font-medium text-rose-600"></span>
+                </div>
+            </div>
+
+            <div class="pt-3 flex items-center gap-3">
+                <button type="submit"
+                        class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 shadow-xs transition cursor-pointer">
+                    Lưu
+                </button>
+                <a th:href="@{/tasks}"
+                   class="px-5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
+                    Hủy
+                </a>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>
+

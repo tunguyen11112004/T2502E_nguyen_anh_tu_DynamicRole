@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: dynamic_role
+      MYSQL_USER: dynamic_role
+      MYSQL_PASSWORD: dynamic_role
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - dynamic_role_mysql:/var/lib/mysql
+
+volumes:
+  dynamic_role_mysql:

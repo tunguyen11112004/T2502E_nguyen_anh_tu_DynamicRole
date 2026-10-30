@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+<header th:replace="~{fragments/nav :: bar}"></header>
+<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-8">
+        <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900" th:text="${assignment.title}">Bài tập</h1>
+                <div class="mt-2 flex flex-wrap items-center gap-4 text-sm text-slate-600">
+                    <span>Giảng viên: <strong class="text-indigo-600" th:text="${assignment.lecturerUsername}">gv</strong></span>
+                    <span>Hạn nộp (giờ Việt Nam): <strong class="text-slate-900" th:text="${assignment.deadlineText}">hạn</strong></span>
+                </div>
+            </div>
+            <span th:text="${assignment.status}"
+                  th:classappend="${assignment.status.name() == 'OPEN' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-700 border-slate-300'}"
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border">OPEN</span>
+        </div>
+
+        <div th:if="${error}" class="mb-4 rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-700" th:text="${error}"></div>
+
+        <div class="rounded-xl bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700 whitespace-pre-wrap"
+             th:text="${assignment.description}">Mô tả</div>
+    </div>
+
+    <section th:if="${submission != null}" class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 class="text-lg font-bold text-slate-900">Bài đã nộp</h2>
+            <span class="text-xs text-slate-500">Lúc: <span class="font-medium text-slate-700" th:text="${submission.submittedAtText}">lúc</span></span>
+        </div>
+        <div class="rounded-xl bg-slate-50 border border-slate-200 p-4 text-sm text-slate-800 whitespace-pre-wrap"
+             th:text="${submission.content}">Nội dung</div>
+
+        <div th:if="${submission.score != null}" class="rounded-xl bg-emerald-50 border border-emerald-200 p-4 space-y-1">
+            <div class="text-sm font-semibold text-emerald-900">
+                Điểm: <span class="text-lg font-bold text-emerald-700" th:text="${submission.score}">0</span>
+            </div>
+            <div th:if="${submission.feedback != null}" class="text-sm text-emerald-800">
+                Nhận xét: <span th:text="${submission.feedback}">Nhận xét</span>
+            </div>
+        </div>
+    </section>
+
+    <div th:if="${canSubmit}" class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-8">
+        <h2 class="text-lg font-bold text-slate-900 mb-4"
+            th:text="${submission == null ? 'Nộp bài' : 'Nộp lại'}">Nộp bài</h2>
+        <form th:action="@{/student/assignments/{id}/submissions(id=${assignment.id})}"
+              th:object="${form}" method="post" class="space-y-4">
+            <div th:if="${#fields.hasGlobalErrors()}"
+                 th:each="e : ${#fields.globalErrors()}"
+                 th:text="${e}"
+                 class="rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-700"></div>
+
+            <div>
+                <label for="content" class="block text-sm font-medium text-slate-700 mb-1.5">Nội dung hoặc liên kết repository</label>
+                <textarea id="content" th:field="*{content}" maxlength="5000" rows="5" required
+                          class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"></textarea>
+                <span th:errors="*{content}" class="block mt-1 text-xs font-medium text-rose-600"></span>
+            </div>
+
+            <div>
+                <button type="submit"
+                        class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 shadow-xs transition cursor-pointer">
+                    Gửi
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${!canSubmit and assignment.status.name() == 'OPEN'}"
+         class="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
+        Đã quá hạn nộp.
+    </div>
+
+    <div>
+        <a th:href="@{/student/assignments}"
+           class="inline-flex items-center px-4 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition">
+            Quay lại
+        </a>
+    </div>
+</main>
+</body>
+</html>
